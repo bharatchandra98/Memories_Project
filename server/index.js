@@ -21,6 +21,10 @@ app.use(cors());
 
 //specify after configuring cors. otherwise it will throw CORS error
 app.use('/posts',postRoutes); //every route inside postRoutes is going to start with posts in the URL 
+
+app.get('/',(req,res)=>{
+    res.send("Hello to Memories API");
+})
 //const CONNECTION_URL = 'mongodb+srv://bsyedida:bharat1998@cluster0.if2t2.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'; //db connection string
 const PORT = process.env.PORT || 5000;
 
