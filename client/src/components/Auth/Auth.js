@@ -4,20 +4,39 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { GoogleLogin } from 'react-google-login';
 import Input from './Input';
 import Icon from './icon';
-
+import {useDispatch} from 'react-redux';
+import {useHistory} from 'react-router-dom';
+import { signin,signup } from '../../actions/auth';
 import useStyles from './styles';
+
+const initialState = {
+    firstName : '',
+    lastName :'',
+    email:'',
+    password:'',
+    confirmPassword:''
+}
 
 const Auth = () => {
     const classes = useStyles();
     const [showPassword, setShowPassword] = useState(false);
     const [isSignup, setIsSignUp] = useState(false);
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const [formData,setFormData] = useState(initialState);
 
-    const handleSubmit = () => {
-
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if(isSignup){
+            dispatch(signup(formData,history))
+        }
+        else{
+            dispatch(signin(formData,history))
+        }
     }
 
-    const handleChange = () => {
-
+    const handleChange = (e) => {
+        setFormData({...formData,[e.target.name]:e.target.value})
     }
 
     const handleShowPassword = () => {
@@ -26,11 +45,20 @@ const Auth = () => {
 
     const switchMode = () => {
         setIsSignUp((prevIsSignUp) => !prevIsSignUp);
-        handleShowPassword(false);
+        setShowPassword(false);
     }
 
     const googleSuccess = async(res) =>{
-        console.log(res);
+        const result = res?.profileObj; // if res.profileObj doesn't exists result = undefined
+        const token = res?.tokenId;
+
+        try{
+            dispatch({type: 'AUTH', data : {result,token}});
+            history.push("/");
+        }
+        catch(e){
+            console.log(e);
+        }
     }
 
     const googleFailure = () =>{
@@ -49,8 +77,8 @@ const Auth = () => {
                     {
                         isSignup && (
                             <>
-                                <Input name="firstname" label="First Name" handleChange={handleChange} autoFocus half />
-                                <Input name="lastname" label="Last Name" handleChange={handleChange} half />
+                                <Input name="firstName" label="First Name" handleChange={handleChange} autoFocus half />
+                                <Input name="lastName" label="Last Name" handleChange={handleChange} half />
                             </>
                         )}
                     <Input name="email" label="Email Address" handleChange={handleChange} type="email" />

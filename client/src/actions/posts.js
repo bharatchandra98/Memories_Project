@@ -18,6 +18,7 @@ export const getPosts = () => async(dispatch) => { //redux thunk - since we have
 }
 
 export const createPost = (post) => async(dispatch) =>{
+    debugger
     try{
         const {data} = await api.createPost(post);
         console.log(data);

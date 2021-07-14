@@ -8,8 +8,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const postRoutes = require('./routes/posts');
-
+const postRoutes = require('./routes/posts.js');
+const userRoutes = require('./routes/user.js');
 
 const app = express(); //initialises the app 
 dotenv.config();
@@ -21,6 +21,7 @@ app.use(cors());
 
 //specify after configuring cors. otherwise it will throw CORS error
 app.use('/posts',postRoutes); //every route inside postRoutes is going to start with posts in the URL 
+app.use('/user',userRoutes);
 
 app.get('/',(req,res)=>{
     res.send("Hello to Memories API");
